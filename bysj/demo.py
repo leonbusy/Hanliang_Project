@@ -1,8 +1,9 @@
 import requests
 import json
+import xlwt
 from openpyxl import Workbook
 
-# 请求接口数据：Request interface data
+# 获取指定接口的数据：Request interface data
 def fetchUrl(url):
     '''
     Function: visit the webpage of URL, get the webpage content and return
@@ -21,7 +22,7 @@ def fetchUrl(url):
     r = requests.get(url, headers=headers)
     r.raise_for_status()
     r.encoding = r.apparent_encoding
-    result = json.loads(r.text)  # json字符串转换成字典 :JSON string to dictionary
+    result = json.loads(r.text)  # json字符串转换成字典
     return result
 
 
@@ -29,14 +30,14 @@ def fetchUrl(url):
 
 if __name__ == '__main__':
     '''
-    Main function: program entry
+    主函数：程序入口
     '''
-    wb=Workbook()
-    sheet=wb.create_sheet('sheet1',index=0)
+    book = xlwt.Workbook(encoding='utf-8', style_compression=0)
+    sheet = book.add_sheet('sheet1', cell_overwrite_ok=True)
 
-    row = ["repo_name","pr_title","comment", 'time', 'author_association','language']
-    sheet.append(row)
-
+    col = ("repo_name","pr_title","comment", 'time', 'author_association','language')
+    for i in range(0, len(col)):
+        sheet.write(0, i, col[i])
 
     # agent = ['https://api.github.com/repos/bitcoin/bitcoin/pulls/comments']
 
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     for i in agent:
         query_url = i
         print("Writting " + str(agent.index(query_url) + 1) + " agent")
-        for j in range(1,11):
+        for j in range(1,5):
             query_url = i+"?page="+str(j)+"&q=is%3Apr+is%3Aopen"
             fetch_result = fetchUrl(query_url)
             if fetch_result!=None:
@@ -68,26 +69,18 @@ if __name__ == '__main__':
                                      fetch_result[k]['created_at'],
                                      fetch_result[k]['author_association'],
                                      fetch_result[k]['base']['repo']['language']])
-                print(datalist)
-                # sheet.append(datalist)
+                # print(datalist)
 
 
     for i in range(0,len(datalist)):
         data=datalist[i]
-        sheet.append(data)
-        # for j in range(0,len(col)):
-        #     sheet.write(i+1,j,data[j])
+        for j in range(0,len(col)):
+            sheet.write(i+1,j,data[j])
 
 
-    wb.save('data' + '.xlsx')
+    book.save('data' + '.xlsx')
     # for i in range(0,len(fetch_result)):
         # aa=fetch_result[i]
         # print(aa['body'],aa['created_at'],aa['author_association'])
-
-
-
-
-
-
 
 
