@@ -14,7 +14,7 @@ github_instance = Github(token)
 repositories = ["airbnb/javascript", "bitcoin/bitcoin", "TheAlgorithms/Python", "twbs/bootstrap", "geekcomputers/Python"]
 
 
-for repository_name in repositories:
+for repository_name in repositories:  
     repo = github_instance.get_repo(repository_name)
     pull_requests = repo.get_pulls(state='open', sort='newest')
 
