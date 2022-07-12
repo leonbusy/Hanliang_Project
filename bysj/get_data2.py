@@ -9,12 +9,12 @@ sheet = wb.create_sheet('sheet1', index=0)
 row = ["repo_name", "repo_number", "pr_title", 'create_time', "comment"]
 sheet.append(row)
 
-token = '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'
+token = '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'
 github_instance = Github(token)
 repositories = ["airbnb/javascript", "bitcoin/bitcoin", "TheAlgorithms/Python", "twbs/bootstrap", "geekcomputers/Python"]
 
 
-for repository_name in repositories:  
+for repository_name in repositories:
     repo = github_instance.get_repo(repository_name)
     pull_requests = repo.get_pulls(state='open', sort='newest')
 
@@ -30,6 +30,7 @@ for repository_name in repositories:
             list_comments.append(repository_name)
             list_comments.append(pr_number)
             list_comments.append(pr_title)
+
 
             # print(str(comments.created_at))
             list_comments.append(str(comments.created_at))

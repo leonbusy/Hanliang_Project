@@ -1,60 +1,14 @@
 import pandas as pd
-import re
-import nltk
 from nltk.tokenize import word_tokenize  # 分词器加载
-from nltk.text import Text
+import re
 from nltk.corpus import stopwords
-from nltk import pos_tag # 词性标注库
-from nltk import ne_chunk
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
 import openpyxl
 
 
-# nltk.download('words') # pip后安装了基本股价 nltk.download()选择性安装更多包 : words, punkt, stopwords, averaged_perceptron_tagger, maxent_ne_chunker
 
-df = pd.read_excel("data.xlsx",sheet_name="sheet1", header=None)
-# sentence = df[4][2]
-
-
-'''
-句子分词
-'''
-# tokens = word_tokenize(sentence)  # 句子分词
-# print(tokens[:10])
-
-'''
-对分词创建Text对象,可以对文本操作
-'''
-# t = Text(tokens)
-# t.plot(10) #图形展示前十个词词频的分布
-
-'''
-过滤停用词
-'''
-# print(stopwords.raw('english').replace('\n', ' ')) # 停用词词库的词有哪些
-# test_words_set = set(tokens)
-# print(test_words_set.intersection(set(stopwords.words('english'))))  # 查看分词后与停用词表有哪些交集的词
-# filtered = [w for w in test_words_set if (w not in stopwords.words('english'))] # 过滤停用词后剩余词
-# filtered_isalpha = [word.lower() for word in filtered if word.isalpha()]  # 过滤标点符号和特殊符号
-# print(tokens)  # 打印原始分词
-# print(filtered) # 打印过滤停用词
-# print(filtered_isalpha) # 打印过滤字符
-
-'''
-词性标注
-'''
-# words_tags = pos_tag(filtered_isalpha)
-# print(words_tags)
-
-'''
-命名实体识别
-'''
-# words_ne_chunk = ne_chunk(words_tags)
-# print(words_ne_chunk)
-
-
+github_standard_data = pd.read_excel("github_gold.xlsx", header=None)
+test_data = pd.DataFrame(github_standard_data)
+# print(test_data[2])
 
 
 '''
@@ -101,14 +55,37 @@ def text_clean(text):
     print("过滤后：", text_filtered)
     return text_filtered
 
-wb = openpyxl.load_workbook('data.xlsx')
+wb = openpyxl.load_workbook('github_gold.xlsx')
 sheet = wb.worksheets[0]
-sheet.cell(1,6,"Comment_Data_cleansing")
-for i in range(1,len(df[4])):
-    data_proceed = text_clean(df[4][i])
-    sheet.cell(i+1,6,data_proceed)
+sheet.cell(2,4,"Standard_Comment_Data_cleansing")
+for i in range(2,len(test_data[2])):
+    data_proceed = text_clean(test_data[2][i])
+    sheet.cell(i+1, 4, data_proceed)
     print("正在写入第"+str(i)+"条")
 
-# wb.save("data2.xlsx")
+
+'''
+增加列： pos = 1， neg = -1, neu = 0
+'''
+
+sheet.cell(2,5,"Polarity_number")
+for i in range(2,len(test_data[2])):
+    polarity_data_read = test_data[1][i]
+    if polarity_data_read == 'neutral':
+        sheet.cell(i + 1, 5, 0)
+        print(polarity_data_read)
+        print("正在写入第" + str(i) + "条")
+    elif polarity_data_read == 'positive':
+        sheet.cell(i + 1, 5, 1)
+        print(polarity_data_read)
+        print("正在写入第" + str(i) + "条")
+    else:
+        sheet.cell(i + 1, 5, -1)
+        print(polarity_data_read)
+        print("正在写入第" + str(i) + "条")
+    # print(polarity_data_read)
+    # sheet.cell(i+1, 4, polarity_data_read)
+    # print("正在写入第"+str(i)+"条")
 
 
+wb.save("github_standard_clean.xlsx")
