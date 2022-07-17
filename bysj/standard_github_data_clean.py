@@ -88,4 +88,4 @@ for i in range(2,len(test_data[2])):
     # print("正在写入第"+str(i)+"条")
 
 
-wb.save("github_standard_clean.xlsx")
+# wb.save("github_standard_clean.xlsx")

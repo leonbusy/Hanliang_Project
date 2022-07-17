@@ -22,7 +22,7 @@ for i in range(2,len(comments_content_x)+2):
     if str(test_data[3][i]) == ' ':
         test_data[3][i] = "None"
         print("此为"+ test_data[3][i])
-    comments_content_x_vec.append(str(test_data[3][i]))  #将分词处理后的一维数据放到列表成二维
+    comments_content_x_vec.append(str(test_data[3][i]))
 
 # print(comments_content_x_vec)   #打印二维评论
 # print(comments_sentiment_y)      #打印极向polarity_number
@@ -39,14 +39,14 @@ comments_sentiment_y_vec_ndarray = np.asarray(comments_sentiment_y_vec,dtype='fl
 # print(comments_content_x_vec_ndarray)
 # print(comments_sentiment_y_vec_ndarray)
 
-X_train,X_test,y_train,y_test = train_test_split(comments_content_x_vec_ndarray,comments_sentiment_y_vec_ndarray,test_size=0.6)
+X_train,X_test,y_train,y_test = train_test_split(comments_content_x_vec_ndarray,comments_sentiment_y_vec_ndarray, test_size=0.33, random_state=3)
 X = X_train.tolist()
 y= y_train.tolist()
 print(X)
 
 TFIDF_SVM_Sentiment_Model = Pipeline([
     ('TFIDF', TfidfVectorizer()),
-    ('SVM', SVC(C=0.95,kernel='linear',probability=True))
+    ('SVM', SVC(C=0.95, kernel='linear', probability=True))
 ])
 
 TFIDF_SVM_Sentiment_Model.fit(X[:6000],np.ravel(y[:6000]))

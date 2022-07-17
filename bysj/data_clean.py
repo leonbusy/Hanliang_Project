@@ -103,12 +103,12 @@ def text_clean(text):
 
 wb = openpyxl.load_workbook('data.xlsx')
 sheet = wb.worksheets[0]
-sheet.cell(1,6,"Comment_Data_cleansing")
+sheet.cell(1,7,"Comment_Data_cleansing")
 for i in range(1,len(df[4])):
     data_proceed = text_clean(df[4][i])
-    sheet.cell(i+1,6,data_proceed)
+    sheet.cell(i+1,7,data_proceed)
     print("正在写入第"+str(i)+"条")
 
-# wb.save("data2.xlsx")
+# wb.save("data_clean.xlsx")
 
 
