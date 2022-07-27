@@ -10,11 +10,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 import openpyxl
-
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+import time
 
 # nltk.download('words') # pip后安装了基本股价 nltk.download()选择性安装更多包 : words, punkt, stopwords, averaged_perceptron_tagger, maxent_ne_chunker
 
-df = pd.read_excel("data.xlsx",sheet_name="sheet1", header=None)
+df = pd.read_excel("data_final.xlsx",sheet_name="sheet1", header=None)
 # sentence = df[4][2]
 
 
@@ -63,10 +64,13 @@ df = pd.read_excel("data.xlsx",sheet_name="sheet1", header=None)
 english_stopwords = stopwords.words('english')
 def text_clean(text):
     # print("原始数据：", text, '\n')
+    # 去掉标签 如<strong></strong>
+    text_no_entities = re.sub(r'\<(.*?)docs\</a\>.|\<code\>(.*?)\</code\>|\<img(.*?)\>|\<strong\>(.*?)\</strong\>|\<em\>(.*?)\</em\>','',str(text))
+    print(text_no_entities)
 
     #去掉HTML标签（e.g. &temp;）
-    text_no_special_entities = re.sub(r'\&\w*;|#\w*|@\w*', '', text)
-    # print("去掉标签后：", text_no_special_entities, '\n')
+    text_no_special_entities = re.sub(r'\&\w*;|#\w*|@\w*', '', text_no_entities)
+    print("去掉标签后：", text_no_special_entities, '\n')
 
     #去掉价值符号
     text_no_tickers = re.sub(r'\$\w*', '', text_no_special_entities)
@@ -101,14 +105,14 @@ def text_clean(text):
     print("过滤后：", text_filtered)
     return text_filtered
 
-wb = openpyxl.load_workbook('data.xlsx')
+wb = openpyxl.load_workbook('data_final.xlsx')
 sheet = wb.worksheets[0]
-sheet.cell(1,7,"Comment_Data_cleansing")
-for i in range(1,len(df[4])):
-    data_proceed = text_clean(df[4][i])
-    sheet.cell(i+1,7,data_proceed)
-    print("正在写入第"+str(i)+"条")
+sheet.cell(1,9,"Comment_Data_cleansing")
+for i in range(1,len(df[5])):
+    data_proceed = text_clean(df[5][i])
+    sheet.cell(i + 1, 9, str(data_proceed))
+    print("正在写入第" + str(i) + "条")
 
-# wb.save("data_clean.xlsx")
+wb.save("data_final_clean2.xlsx")
 
 

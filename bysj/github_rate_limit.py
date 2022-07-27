@@ -41,6 +41,6 @@ def apply_api_rate_limiting(github_instance):
 
 
 def rate_limited_github_instance():
-    github_instance = Github('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')
+    github_instance = Github('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')
     apply_api_rate_limiting(github_instance)
     return github_instance

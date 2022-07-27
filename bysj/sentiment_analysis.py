@@ -3,16 +3,16 @@ import pandas as pd
 import openpyxl
 
 
-get_data = pd.read_excel("data_clean.xlsx", header=None,keep_default_na=False)
+get_data = pd.read_excel("data_final_final_clean.xlsx", header=None,keep_default_na=False)
 
-wb = openpyxl.load_workbook('data_clean.xlsx')
+wb = openpyxl.load_workbook('data_final_final_clean.xlsx')
 sheet = wb.worksheets[0]
-sheet.cell(1, 8, "Comment_predict_number")
-sheet.cell(1, 9, "Comment_predict_sentiment")
+sheet.cell(1, 10, "Comment_predict_number")
+sheet.cell(1, 11, "Comment_predict_sentiment")
 
 
-for i in range(1,len(get_data[6])):
-    data_read = get_data[6][i]
+for i in range(1,len(get_data[8])):
+    data_read = get_data[8][i]
     # print(data_read)
     if data_read == '':
         data_read = "None"
@@ -25,16 +25,16 @@ for i in range(1,len(get_data[6])):
 
     if y_pre[0] == -1:
         print(data_read,": Most likely negative in sentiment（Probability："+str(proba[0])+")")
-        sheet.cell(i+1,8, int(y_pre[0]))
-        sheet.cell(i+1,9,"negative")
+        sheet.cell(i+1,10, int(y_pre[0]))
+        sheet.cell(i+1,11,"negative")
     elif y_pre[0] == 0:
         print(data_read,": Most likely neutral in sentiment（Probability："+str(proba[1])+")")
-        sheet.cell(i+1,8, int(y_pre[0]))
-        sheet.cell(i+1,9,"neutral")
+        sheet.cell(i+1,10, int(y_pre[0]))
+        sheet.cell(i+1,11,"neutral")
     elif y_pre[0] == 1:
         print(data_read,": Most likely positive in sentiment（Probability："+str(proba[2])+")")
-        sheet.cell(i+1,8, int(y_pre[0]))
-        sheet.cell(i+1,9,"positive")
+        sheet.cell(i+1,10, int(y_pre[0]))
+        sheet.cell(i+1,11,"positive")
 
 
 
@@ -43,4 +43,4 @@ for i in range(1,len(get_data[6])):
 #     sheet.cell(i+1,7,data_proceed)
 #     print("正在写入第"+str(i)+"条")
 
-wb.save("data_clean_predict.xlsx")
+wb.save("data_final_clean_predict.xlsx")
